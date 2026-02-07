@@ -1,0 +1,772 @@
+﻿@page "/"
+@using System.Globalization
+@using System.Text
+@using CsvHelper
+@using CsvHelper.Configuration
+@using CsvHelper.Configuration.Attributes
+@inject HttpClient Http
+@inject IConfiguration Config
+
+<PageTitle>God of Burger - Cardápio Digital</PageTitle>
+
+<header>
+  <nav id="navbar">
+    <img src="src/images/god_of_burguer.png" id="nav_logo" alt="Logo God of Burger" />
+    <ul id="nav_list">
+      <li class="nav-item">
+        <a href="@WhatsAppLink" target="_blank">WhatsApp</a>
+      </li>
+      <li class="nav-item">
+        <a href="@InstagramUrl" target="_blank">Instagram</a>
+      </li>
+      <li class="nav-item">
+        <a href="@MapsUrl" target="_blank">Localização</a>
+      </li>
+    </ul>
+    <button id="mobile_btn" @onclick="ToggleMobileMenu" aria-expanded="@isMobileMenuOpen" aria-controls="mobile_menu">
+      <i class="fa-solid @(isMobileMenuOpen ? "fa-x" : "fa-bars")"></i>
+    </button>
+  </nav>
+  <div id="mobile_menu" class="@(isMobileMenuOpen ? "active" : string.Empty)">
+    <ul id="mobile_nav_list">
+      <li class="nav-item">
+        <a href="@WhatsAppLink">WhatsApp</a>
+      </li>
+      <li class="nav-item">
+        <a href="@InstagramUrl">Instagram</a>
+      </li>
+      <li class="nav-item">
+        <a href="@MapsUrl">Localização</a>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<main id="content">
+  <section id="menu">
+    @if (isLoading)
+    {
+      <p>Carregando cardápio...</p>
+    }
+    else if (!string.IsNullOrWhiteSpace(loadError))
+    {
+      <p>@loadError</p>
+    }
+    else
+    {
+      foreach (var category in OrderedCategories)
+      {
+        if (!Categories.TryGetValue(category, out var items) || items.Count == 0)
+        {
+          continue;
+        }
+
+        var titleClass = "beverages_title";
+        var titleStyle = category == "HAMBURGUERES"
+          ? "height:0;margin:0;padding:0;overflow:hidden;opacity:0;border:none;"
+          : string.Empty;
+
+        <h1 class="@titleClass" style="@titleStyle">@category</h1>
+
+        if (category == "ADICIONAIS")
+        {
+          <div class="adicionais_list">
+            @foreach (var item in items)
+            {
+              <div class="adicionais_item">
+                <span class="adicionais_name">@item.Name</span>
+                <span class="adicionais_price">@item.PriceText</span>
+              </div>
+            }
+          </div>
+        }
+        else
+        {
+          <div class="menu_items">
+            @foreach (var item in items)
+            {
+              var isExpandable = !string.IsNullOrWhiteSpace(item.Description);
+              var isExpanded = expandedItems.Contains(item.Id);
+              var itemClass = GetItemClass(category);
+              var descClass = GetDescClass(category);
+              var imgClass = GetImgClass(category);
+              var descId = $"desc-{item.Id}";
+
+              <div class="@itemClass @(isExpandable ? "expandable" : string.Empty) @(isExpanded ? "is-expanded" : string.Empty)"
+                   tabindex="@(isExpandable ? "0" : null)"
+                   role="@(isExpandable ? "button" : null)"
+                   aria-controls="@(isExpandable ? descId : null)"
+                   aria-expanded="@(isExpandable ? isExpanded.ToString().ToLowerInvariant() : null)"
+                   @onclick="(() => ToggleDescription(item))"
+                   @onkeydown="(e => OnItemKeyDown(e, item))">
+                <div class="img-container @((imgClass + "-container"))">
+                  <img src="@item.ImageUrl" class="@imgClass" alt="@item.Name" @onerror="() => OnImageError(item)" />
+                </div>
+                <h2 class="item-title">@item.Name</h2>
+                @if (!string.IsNullOrWhiteSpace(item.Description))
+                {
+                  <p id="@descId" class="@descClass @(isExpanded ? "expanded" : string.Empty)" title="@item.Description">@item.Description</p>
+                }
+                @if (!string.IsNullOrWhiteSpace(item.PriceText))
+                {
+                  <button class="btn-default" @onclick="() => AddToCart(item)" @onclick:stopPropagation="true">
+                    @item.PriceText · Adicionar
+                  </button>
+                }
+
+                @if (isExpandable)
+                {
+                  <i class="fa-solid fa-chevron-down chevron-icon" aria-hidden="true"></i>
+                }
+              </div>
+            }
+          </div>
+        }
+      }
+    }
+  </section>
+
+  <section id="about">
+    <div id="cta">
+      <div class="cta-inner">
+        <h1 class="title">ENDEREÇO</h1>
+        <h4 class="description">@Endereco</h4>
+        <div id="cta_buttons">
+          <a href="@WhatsAppLink" class="btn-contact" aria-label="WhatsApp">
+            <i class="fa-brands fa-whatsapp"></i>
+          </a>
+          <a href="@InstagramUrl" class="btn-contact" aria-label="Instagram">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a href="@MapsUrl" class="btn-contact" aria-label="Localização">
+            <i class="fa-solid fa-location-dot"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div id="banner"></div>
+  </section>
+</main>
+
+<div class="cart-fab-wrap">
+  @if (showCartHint)
+  {
+    <span class="cart-hint">Clique aqui para visualizar o carrinho</span>
+  }
+    @if (CartCount > 0 && !isCartOpen)
+  {
+    <span class="cart-total-pill">Total: @TotalWithDeliveryText</span>
+  }
+  <button class="cart-fab" @onclick="ToggleCart" aria-label="Abrir carrinho">
+    <i class="fa-solid fa-cart-shopping"></i>
+    @if (CartCount > 0)
+    {
+      <span class="cart-badge" aria-hidden="true"></span>
+    }
+  </button>
+</div>
+
+<div class="cart-overlay @(isCartOpen ? "show" : string.Empty)" @onclick="CloseCart"></div>
+<div class="cart-panel @(isCartOpen ? "show" : string.Empty)" @onclick:stopPropagation="true">
+  <div class="cart-header">
+    <span>Carrinho</span>
+    <div class="cart-header-actions">
+      <button class="cart-clear" @onclick="ClearCart" disabled="@(cartItems.Count == 0)">Limpar</button>
+      <button class="cart-close" @onclick="CloseCart" aria-label="Fechar carrinho">×</button>
+    </div>
+  </div>
+  <div class="cart-items">
+    @if (cartItems.Count == 0)
+    {
+      <p class="cart-empty">Adicione itens para enviar o pedido.</p>
+    }
+    else
+    {
+      foreach (var item in cartItems.Values)
+      {
+        <div class="cart-item">
+          <div class="cart-item-main">
+            <div class="cart-item-title">
+              <span>@item.Name</span>
+              @if (CanHaveAdditions(item))
+              {
+                <button class="cart-add-btn" @onclick="() => ToggleAdditions(item.Name)">
+                  Adicionais
+                </button>
+              }
+            </div>
+            @if (item.Additions.Count > 0)
+            {
+              <div class="cart-additions-block">
+                <div class="cart-additions-title">Adicionais</div>
+                <div class="cart-additions-list">
+                  @foreach (var add in item.Additions.OrderBy(a => a.Key))
+                  {
+                    var addPrice = GetAdditionPrice(add.Key);
+                    var addPriceText = addPrice.HasValue ? FormatPrice(addPrice.Value) : "";
+                    <div class="cart-additions-row">
+                      <span>+ @add.Key</span>
+                      <span>@add.Value x · @addPriceText</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+          <div class="cart-qty">
+            <button class="cart-qty-btn" @onclick="() => Decrease(item.Name)">-</button>
+            <span>@item.Quantity</span>
+            <button class="cart-qty-btn" @onclick="() => Increase(item.Name)">+</button>
+          </div>
+        </div>
+        @if (CanHaveAdditions(item) && expandedAdditions.Contains(item.Name))
+        {
+          <div class="cart-additions-panel">
+            @foreach (var add in AdicionaisOptions)
+            {
+              var addPriceText = add.Price.HasValue ? FormatPrice(add.Price.Value) : "";
+              <button class="cart-add-option" @onclick="() => AddAddition(item.Name, add.Name)">
+                @add.Name @addPriceText
+              </button>
+            }
+          </div>
+        }
+      }
+    }
+  </div>
+  <div class="cart-divider"></div>
+  <div class="cart-total-row">
+    <div>Subtotal</div>
+    <div>@FormatPrice(CartTotal)</div>
+  </div>
+  <div class="cart-total-row">
+    <div>Taxa de entrega</div>
+    <div>@FormatPrice(DeliveryFee)</div>
+  </div>
+  <div class="cart-total-row cart-total-strong">
+    <div>Total</div>
+    <div>@FormatPrice(CartTotal + DeliveryFee)</div>
+  </div>
+  <a class="cart-send @(cartItems.Count == 0 ? "disabled" : string.Empty)" href="@WhatsAppOrderLink" target="_blank">
+    Enviar no WhatsApp
+  </a>
+</div>
+
+<div class="toast @(isToastVisible ? "show" : string.Empty)">
+  @toastMessage
+</div>
+
+@code {
+  private string WhatsAppNumber => Config["WhatsAppNumber"] ?? "0000000000000";
+  private string MenuCsvUrl => Config["MenuCsvUrl"] ?? "";
+  private decimal Taxa => decimal.TryParse(Config["Taxa"], NumberStyles.Any, CultureInfo.InvariantCulture, out var result) ? result : 0m;
+  private string InstagramUrl => Config["InstagramUrl"] ?? "";
+  private string MapsUrl => Config["MapsUrl"] ?? "";
+  private string Endereco => Config["Endereco"] ?? "";
+
+  private bool isMobileMenuOpen;
+  private bool isLoading = true;
+  private string? loadError;
+
+  private readonly Dictionary<string, List<MenuItem>> Categories = new(StringComparer.OrdinalIgnoreCase);
+  private readonly HashSet<string> expandedItems = new(StringComparer.OrdinalIgnoreCase);
+  private readonly Dictionary<string, CartItem> cartItems = new(StringComparer.OrdinalIgnoreCase);
+  private bool isCartOpen;
+  private readonly HashSet<string> expandedAdditions = new(StringComparer.OrdinalIgnoreCase);
+  private bool isToastVisible;
+  private string toastMessage = string.Empty;
+  private bool showCartHint;
+
+  private readonly List<string> CategoryOrder = new() { "HAMBURGUERES", "ADICIONAIS" };
+
+  private IEnumerable<string> OrderedCategories
+  {
+    get
+    {
+      var remaining = Categories.Keys.Where(c => !CategoryOrder.Contains(c, StringComparer.OrdinalIgnoreCase));
+      return CategoryOrder.Concat(remaining);
+    }
+  }
+
+  private IEnumerable<MenuItem> AdicionaisOptions
+    => Categories.TryGetValue("ADICIONAIS", out var list) ? list : Enumerable.Empty<MenuItem>();
+
+  private decimal DeliveryFee => Taxa;
+  private string WhatsAppLink => $"https://wa.me/{WhatsAppNumber}";
+  private string TotalWithDeliveryText => FormatPrice(CartTotal + DeliveryFee);
+
+  private string WhatsAppOrderLink
+  {
+    get
+    {
+      if (cartItems.Count == 0)
+      {
+        return WhatsAppLink;
+      }
+
+      var message = BuildOrderMessage();
+      return $"https://wa.me/{WhatsAppNumber}?text={Uri.EscapeDataString(message)}";
+    }
+  }
+
+  private int CartCount => cartItems.Values.Sum(i => i.Quantity);
+  private decimal CartTotal
+  {
+    get
+    {
+      decimal total = 0m;
+      foreach (var item in cartItems.Values)
+      {
+        if (item.Price.HasValue)
+        {
+          total += item.Price.Value * item.Quantity;
+        }
+
+        foreach (var add in item.Additions)
+        {
+          var addPrice = GetAdditionPrice(add.Key);
+          if (addPrice.HasValue)
+          {
+            total += addPrice.Value * add.Value;
+          }
+        }
+      }
+
+      return total;
+    }
+  }
+
+  protected override async Task OnInitializedAsync()
+  {
+    await LoadMenuAsync();
+  }
+
+  private async Task LoadMenuAsync()
+  {
+    isLoading = true;
+    loadError = null;
+
+    try
+    {
+      var csvContent = await Http.GetStringAsync(MenuCsvUrl);
+      var sanitized = TrimToHeader(csvContent);
+      using var reader = new StringReader(sanitized);
+      var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+      {
+        HasHeaderRecord = true,
+        TrimOptions = TrimOptions.Trim,
+        MissingFieldFound = null,
+        BadDataFound = null,
+        HeaderValidated = null
+      };
+
+      using var csv = new CsvReader(reader, config);
+      var records = csv.GetRecords<MenuRow>().ToList();
+
+      Categories.Clear();
+      var itemCounter = 0;
+      foreach (var row in records)
+      {
+        if (string.IsNullOrWhiteSpace(row.Categoria) || string.IsNullOrWhiteSpace(row.NomeDoItem))
+        {
+          continue;
+        }
+
+        var category = row.Categoria.Trim().ToUpperInvariant();
+        if (!Categories.TryGetValue(category, out var list))
+        {
+          list = new List<MenuItem>();
+          Categories[category] = list;
+        }
+
+        itemCounter++;
+        var item = new MenuItem
+        {
+          Id = $"{category}-{itemCounter}",
+          Category = category,
+          Name = row.NomeDoItem.Trim(),
+          Description = row.Descricao?.Trim(),
+          Price = ParsePrice(row.Preco),
+          PhotoUrl = row.Foto?.Trim()
+        };
+
+        item.ImageUrl = !string.IsNullOrWhiteSpace(item.PhotoUrl)
+          ? item.PhotoUrl
+          : GenerateImagePath(item.Name);
+
+        list.Add(item);
+      }
+
+      AddAdicionais();
+
+      if (Categories.Count == 0)
+      {
+        loadError = "Nenhum item de cardápio válido encontrado. Verifique a planilha.";
+      }
+    }
+    catch
+    {
+      loadError = "Erro ao carregar o cardápio. Verifique a conexão ou o link da planilha.";
+    }
+    finally
+    {
+      isLoading = false;
+    }
+  }
+
+  private void AddAdicionais()
+  {
+    var adicionais = new List<MenuItem>
+    {
+      new() { Id = "ad-1", Category = "ADICIONAIS", Name = "Hambúrguer 140g", Price = 6.99m },
+      new() { Id = "ad-2", Category = "ADICIONAIS", Name = "Bacon", Price = 3.99m },
+      new() { Id = "ad-3", Category = "ADICIONAIS", Name = "Ovo", Price = 0.99m },
+      new() { Id = "ad-4", Category = "ADICIONAIS", Name = "Cheddar", Price = 3.99m },
+      new() { Id = "ad-5", Category = "ADICIONAIS", Name = "Muçarela", Price = 3.99m },
+      new() { Id = "ad-6", Category = "ADICIONAIS", Name = "Onion rings", Price = 3.99m },
+      new() { Id = "ad-7", Category = "ADICIONAIS", Name = "Cebola caramelizada", Price = 2.99m },
+      new() { Id = "ad-8", Category = "ADICIONAIS", Name = "Cebola roxa", Price = 0.99m },
+      new() { Id = "ad-9", Category = "ADICIONAIS", Name = "Alface", Price = 0.99m },
+      new() { Id = "ad-10", Category = "ADICIONAIS", Name = "Tomate", Price = 0.99m },
+      new() { Id = "ad-11", Category = "ADICIONAIS", Name = "Maionese", Price = 2.99m },
+      new() { Id = "ad-12", Category = "ADICIONAIS", Name = "Barbecue", Price = 2.99m },
+      new() { Id = "ad-13", Category = "ADICIONAIS", Name = "Molho picante", Price = 2.99m },
+      new() { Id = "ad-14", Category = "ADICIONAIS", Name = "Sachê ketchup", Price = 0.25m },
+      new() { Id = "ad-15", Category = "ADICIONAIS", Name = "Sachê maionese", Price = 0.25m }
+    };
+
+    Categories["ADICIONAIS"] = adicionais;
+  }
+
+  private static decimal? ParsePrice(string? value)
+  {
+    if (string.IsNullOrWhiteSpace(value))
+    {
+      return null;
+    }
+
+    if (decimal.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var result))
+    {
+      return result;
+    }
+
+    var pt = CultureInfo.GetCultureInfo("pt-BR");
+    if (decimal.TryParse(value, NumberStyles.Any, pt, out result))
+    {
+      return result;
+    }
+
+    return null;
+  }
+
+  private static string TrimToHeader(string csv)
+  {
+    var lines = csv.Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.None);
+    for (var i = 0; i < lines.Length; i++)
+    {
+      if (lines[i].Contains("Categoria", StringComparison.OrdinalIgnoreCase)
+        && lines[i].Contains("Nome do Item", StringComparison.OrdinalIgnoreCase))
+      {
+        return string.Join("\n", lines.Skip(i));
+      }
+    }
+
+    return csv;
+  }
+
+  private static string GetItemClass(string category)
+  {
+    var normalized = RemoveDiacritics(category).ToUpperInvariant();
+    return normalized switch
+    {
+      "HAMBURGUERES" => "hamburguer",
+      "ACOMPANHAMENTOS" => "acompanhamento",
+      "BEBIDAS" => "bebida",
+      _ => "item"
+    };
+  }
+
+  private static string GetDescClass(string category)
+  {
+    var normalized = RemoveDiacritics(category).ToUpperInvariant();
+    return normalized is "BEBIDAS" or "ACOMPANHAMENTOS" ? "item-description_2" : "item-description";
+  }
+
+  private static string GetImgClass(string category)
+  {
+    var normalized = RemoveDiacritics(category).ToUpperInvariant();
+    return normalized switch
+    {
+      "HAMBURGUERES" => "h_img",
+      "ACOMPANHAMENTOS" => "a_img",
+      "BEBIDAS" => "b_img",
+      _ => "img"
+    };
+  }
+
+  private static string GenerateImagePath(string itemName)
+  {
+    if (string.IsNullOrWhiteSpace(itemName))
+    {
+      return "src/images/example.png";
+    }
+
+    var imageName = RemoveDiacritics(itemName)
+      .Trim()
+      .ToLowerInvariant()
+      .Replace(" ", "_")
+      .Replace("__", "_");
+
+    var sb = new StringBuilder();
+    foreach (var c in imageName)
+    {
+      if (char.IsLetterOrDigit(c) || c == '_' || c == '-')
+      {
+        sb.Append(c);
+      }
+    }
+
+    return $"src/images/{sb}.png";
+  }
+
+  private static string RemoveDiacritics(string value)
+  {
+    var normalized = value.Normalize(NormalizationForm.FormD);
+    var sb = new StringBuilder();
+    foreach (var c in normalized)
+    {
+      if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+      {
+        sb.Append(c);
+      }
+    }
+    return sb.ToString().Normalize(NormalizationForm.FormC);
+  }
+
+  private void ToggleMobileMenu()
+  {
+    isMobileMenuOpen = !isMobileMenuOpen;
+  }
+
+  private void ToggleDescription(MenuItem item)
+  {
+    if (string.IsNullOrWhiteSpace(item.Description))
+    {
+      return;
+    }
+
+    if (!expandedItems.Add(item.Id))
+    {
+      expandedItems.Remove(item.Id);
+    }
+  }
+
+  private void OnItemKeyDown(KeyboardEventArgs e, MenuItem item)
+  {
+    if (e.Key is "Enter" or " ")
+    {
+      ToggleDescription(item);
+    }
+  }
+
+  private void OnImageError(MenuItem item)
+  {
+    item.ImageUrl = "src/images/example.png";
+  }
+
+  private void AddToCart(MenuItem item)
+  {
+    var previousCount = CartCount;
+    if (!cartItems.TryGetValue(item.Name, out var cartItem))
+    {
+      cartItem = new CartItem { Name = item.Name, Quantity = 0, Category = item.Category, Price = item.Price };
+      cartItems[item.Name] = cartItem;
+    }
+
+    cartItem.Quantity++;
+    UpdateCartHint(previousCount);
+    ShowToast($"{item.Name} adicionado ao carrinho");
+  }
+
+  private void Increase(string name)
+  {
+    var previousCount = CartCount;
+    if (cartItems.TryGetValue(name, out var cartItem))
+    {
+      cartItem.Quantity++;
+      UpdateCartHint(previousCount);
+      ShowToast($"{cartItem.Name} +1");
+    }
+  }
+
+  private void Decrease(string name)
+  {
+    var previousCount = CartCount;
+    if (!cartItems.TryGetValue(name, out var cartItem))
+    {
+      return;
+    }
+
+    cartItem.Quantity--;
+    if (cartItem.Quantity <= 0)
+    {
+      cartItems.Remove(name);
+      expandedAdditions.Remove(name);
+      ShowToast($"{cartItem.Name} removido");
+    }
+    else
+    {
+      ShowToast($"{cartItem.Name} -1");
+    }
+    UpdateCartHint(previousCount);
+  }
+
+  private void ClearCart()
+  {
+    var previousCount = CartCount;
+    cartItems.Clear();
+    expandedAdditions.Clear();
+    UpdateCartHint(previousCount);
+    ShowToast("Carrinho limpo");
+  }
+
+  private void ToggleCart()
+  {
+    isCartOpen = !isCartOpen;
+    if (isCartOpen)
+    {
+      showCartHint = false;
+    }
+  }
+
+  private void CloseCart()
+  {
+    isCartOpen = false;
+  }
+
+  private void ToggleAdditions(string itemName)
+  {
+    if (!expandedAdditions.Add(itemName))
+    {
+      expandedAdditions.Remove(itemName);
+    }
+  }
+
+  private void AddAddition(string itemName, string additionName)
+  {
+    if (!cartItems.TryGetValue(itemName, out var cartItem))
+    {
+      return;
+    }
+
+    if (!cartItem.Additions.TryGetValue(additionName, out var count))
+    {
+      count = 0;
+    }
+
+    cartItem.Additions[additionName] = count + 1;
+    expandedAdditions.Remove(itemName);
+    ShowToast($"{additionName} adicionado em {itemName}");
+  }
+
+  private string BuildOrderMessage()
+  {
+    var sb = new StringBuilder();
+    sb.AppendLine("Olá! Gostaria de pedir:");
+
+    foreach (var item in cartItems.Values.OrderBy(i => i.Name))
+    {
+      var additions = item.Additions.Count == 0
+        ? string.Empty
+        : " + " + string.Join(", ", item.Additions.OrderBy(a => a.Key).Select(a => $"{a.Key} ({a.Value}x)"));
+
+      sb.AppendLine($"• {item.Name} ({item.Quantity}x){additions}");
+    }
+
+    sb.AppendLine("--------------------------------");
+    sb.AppendLine($"Subtotal: {FormatPrice(CartTotal)}");
+    sb.AppendLine($"Taxa de entrega: {FormatPrice(DeliveryFee)}");
+    sb.AppendLine($"Total: {FormatPrice(CartTotal + DeliveryFee)}");
+
+    return sb.ToString();
+  }
+
+  private bool CanHaveAdditions(CartItem item)
+  {
+    var normalized = RemoveDiacritics(item.Category).ToUpperInvariant();
+    return normalized == "HAMBURGUERES";
+  }
+
+  private decimal? GetAdditionPrice(string name)
+  {
+    var match = AdicionaisOptions.FirstOrDefault(a => a.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+    return match?.Price;
+  }
+
+  private string FormatPrice(decimal value)
+  {
+    return value.ToString("C", CultureInfo.GetCultureInfo("pt-BR"));
+  }
+
+  private async void ShowToast(string message)
+  {
+    toastMessage = message;
+    isToastVisible = true;
+    StateHasChanged();
+    await Task.Delay(1800);
+    isToastVisible = false;
+    StateHasChanged();
+  }
+
+  private void UpdateCartHint(int previousCount)
+  {
+    var newCount = CartCount;
+    if (isCartOpen || newCount == 0 || newCount >= 2)
+    {
+      showCartHint = false;
+      return;
+    }
+
+    showCartHint = previousCount == 0 && newCount == 1;
+  }
+
+  private sealed class MenuItem
+  {
+    public required string Id { get; set; }
+    public required string Category { get; set; }
+    public required string Name { get; set; }
+    public string? Description { get; set; }
+    public decimal? Price { get; set; }
+    public string? PhotoUrl { get; set; }
+    public string ImageUrl { get; set; } = "src/images/example.png";
+    public string PriceText => Price.HasValue ? Price.Value.ToString("C", CultureInfo.GetCultureInfo("pt-BR")) : string.Empty;
+  }
+
+  private sealed class CartItem
+  {
+    public required string Name { get; set; }
+    public int Quantity { get; set; }
+    public required string Category { get; set; }
+    public decimal? Price { get; set; }
+    public Dictionary<string, int> Additions { get; } = new(StringComparer.OrdinalIgnoreCase);
+  }
+
+  private sealed class MenuRow
+  {
+    [Name("Categoria")]
+    public string? Categoria { get; set; }
+
+    [Name("Nome do Item")]
+    public string? NomeDoItem { get; set; }
+
+    [Name("Descrição")]
+    public string? Descricao { get; set; }
+
+    [Name("Preço (R$)")]
+    public string? Preco { get; set; }
+
+    [Name("Foto")]
+    public string? Foto { get; set; }
+  }
+}
+
