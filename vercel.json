@@ -1,4 +1,11 @@
 {
-  "buildCommand": "node app/scripts/generate.settings.mjs && curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel 10.0 && export DOTNET_ROOT=$HOME/.dotnet && export PATH=$DOTNET_ROOT:$PATH && dotnet publish app/BlazorTemplate.csproj -c Release -o dist",
-  "outputDirectory": "dist/wwwroot"
+  "buildCommand": "bash build.sh",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "cleanUrls": true
 }
