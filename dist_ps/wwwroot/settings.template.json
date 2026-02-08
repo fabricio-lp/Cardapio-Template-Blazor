@@ -1,8 +1,0 @@
-{
-  "WhatsAppNumber": "${WHATSAPP_NUMBER}",
-  "Taxa": "${TAXA}",
-  "MenuCsvUrl": "${MENU_CSV_URL}",
-  "InstagramUrl": "${INSTAGRAM_URL}",
-  "MapsUrl": "${MAPS_URL}",
-  "Endereco": "${ENDERECO}"
-}
