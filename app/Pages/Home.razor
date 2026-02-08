@@ -397,8 +397,6 @@
         list.Add(item);
       }
 
-      AddAdicionais();
-
       if (Categories.Count == 0)
       {
         loadError = "Nenhum item de cardápio válido encontrado. Verifique a planilha.";
@@ -413,31 +411,7 @@
       isLoading = false;
     }
   }
-
-  private void AddAdicionais()
-  {
-    var adicionais = new List<MenuItem>
-    {
-      new() { Id = "ad-1", Category = "ADICIONAIS", Name = "Hambúrguer 140g", Price = 6.99m },
-      new() { Id = "ad-2", Category = "ADICIONAIS", Name = "Bacon", Price = 3.99m },
-      new() { Id = "ad-3", Category = "ADICIONAIS", Name = "Ovo", Price = 0.99m },
-      new() { Id = "ad-4", Category = "ADICIONAIS", Name = "Cheddar", Price = 3.99m },
-      new() { Id = "ad-5", Category = "ADICIONAIS", Name = "Muçarela", Price = 3.99m },
-      new() { Id = "ad-6", Category = "ADICIONAIS", Name = "Onion rings", Price = 3.99m },
-      new() { Id = "ad-7", Category = "ADICIONAIS", Name = "Cebola caramelizada", Price = 2.99m },
-      new() { Id = "ad-8", Category = "ADICIONAIS", Name = "Cebola roxa", Price = 0.99m },
-      new() { Id = "ad-9", Category = "ADICIONAIS", Name = "Alface", Price = 0.99m },
-      new() { Id = "ad-10", Category = "ADICIONAIS", Name = "Tomate", Price = 0.99m },
-      new() { Id = "ad-11", Category = "ADICIONAIS", Name = "Maionese", Price = 2.99m },
-      new() { Id = "ad-12", Category = "ADICIONAIS", Name = "Barbecue", Price = 2.99m },
-      new() { Id = "ad-13", Category = "ADICIONAIS", Name = "Molho picante", Price = 2.99m },
-      new() { Id = "ad-14", Category = "ADICIONAIS", Name = "Sachê ketchup", Price = 0.25m },
-      new() { Id = "ad-15", Category = "ADICIONAIS", Name = "Sachê maionese", Price = 0.25m }
-    };
-
-    Categories["ADICIONAIS"] = adicionais;
-  }
-
+  
   private static decimal? ParsePrice(string? value)
   {
     if (string.IsNullOrWhiteSpace(value))
