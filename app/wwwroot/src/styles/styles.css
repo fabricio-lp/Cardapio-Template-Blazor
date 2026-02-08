@@ -245,7 +245,7 @@ button:focus-visible {
 
 .cart-hint {
   position: absolute;
-  right: 0;
+  right: 6px;
   bottom: 70px;
   background: rgba(164, 129, 71, 0.9);
   border: none;
@@ -263,16 +263,16 @@ button:focus-visible {
 }
 
 .cart-hint::after {
-  content: "";
+  content: '';
   position: absolute;
-  right: 18px;
-  bottom: -8px;
-  width: 14px;
-  height: 14px;
+  bottom: -7px;
+  right: 15px;
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(135deg, rgba(164, 129, 71, 0) 50%, rgba(164, 129, 71, 0.9) 50%);
+  border-bottom: 1px solid rgba(207, 180, 135, 0.55);
+  border-right: 1px solid rgba(207, 180, 135, 0.55);
   transform: rotate(45deg);
-  background: rgba(164, 129, 71, 0.9);
-  box-shadow: 0 0 0 1px rgba(207, 180, 135, 0.55);
-  border-radius: 2px;
 }
 
 @keyframes hintPulse {
@@ -319,19 +319,6 @@ button:focus-visible {
   box-shadow:
     0 0 0 1px rgba(207, 180, 135, 0.25),
     0 8px 16px rgba(0, 0, 0, 0.25);
-}
-
-.cart-total-pill::after {
-  content: "";
-  position: absolute;
-  right: -8px;
-  top: 50%;
-  width: 14px;
-  height: 14px;
-  transform: translateY(-50%) rotate(45deg);
-  background: rgba(23, 23, 23, 0.65);
-  box-shadow: 0 0 0 1px rgba(207, 180, 135, 0.25);
-  border-radius: 2px;
 }
 
 .cart-fab:hover {
@@ -662,6 +649,6 @@ button:focus-visible {
   }
 
   .cart-items {
-    height: 30vh;
+    height: 34vh;
   }
 }

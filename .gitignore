@@ -435,3 +435,7 @@ FodyWeavers.xsd
 
 # macOS
 .DS_Store
+
+# Settings
+app/wwwroot/settings.json
+app/wwwroot/settings.local.json
