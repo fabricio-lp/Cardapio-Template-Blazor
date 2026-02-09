@@ -23,9 +23,71 @@
 
 /* Ensure at least 2 columns on small screens */
 @media (max-width: 520px) {
-  .menu_items {
+  .menu_items.menu_items--default {
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
+  }
+
+  .menu_items.menu_items--hamburguer {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .menu_items.menu_items--hamburguer .hamburguer {
+    display: grid !important;
+    grid-template-columns: 80px 1fr auto;
+    grid-template-areas:
+      "img title button"
+      "img desc  button"
+      "img price button";
+    align-items: center;
+    column-gap: 12px;
+    row-gap: 4px;
+    padding: 12px;
+  }
+
+  .menu_items.menu_items--hamburguer .hamburguer .img-container {
+    grid-area: img;
+    margin: 0;
+  }
+
+  .menu_items.menu_items--hamburguer .hamburguer .h_img-container {
+    width: 72px;
+    height: 72px;
+  }
+
+  .menu_items.menu_items--hamburguer .hamburguer .item-title {
+    grid-area: title;
+    text-align: left;
+    font-size: 1.5rem;
+    line-height: 1.1;
+  }
+
+  .menu_items.menu_items--hamburguer .hamburguer .item-description {
+    grid-area: desc;
+    text-align: left;
+    margin-top: 2px;
+    padding: 0;
+    font-size: 0.82rem;
+    line-height: 1.35;
+  }
+
+  .menu_items.menu_items--hamburguer .hamburguer .item-price {
+    grid-area: price;
+    text-align: left;
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .menu_items.menu_items--hamburguer .hamburguer .btn-default {
+    grid-area: button;
+    margin-top: 0;
+    align-self: center;
+    padding: 6px 10px;
+    font-size: 0.9rem;
+    border-radius: 10px;
   }
 
   .hamburguer,
@@ -37,6 +99,11 @@
 
   .item-description {
     font-size: 0.82rem;
+  }
+
+  .acompanhamento,
+  .bebida {
+    font-size: smaller;
   }
 }
 
@@ -270,8 +337,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 0;
-  font-size: 1.05rem;
+  padding: 10px 0;
+  font-size: 0.8rem;
   color: var(--muted);
 }
 
@@ -282,7 +349,7 @@
 
 .adicionais_name {
   font-family: "Montserrat", sans-serif;
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: 1px;
   color: #e6e2d9;
 }
@@ -290,6 +357,6 @@
 .adicionais_price {
   font-family: "Montserrat", sans-serif;
   font-weight: 700;
-  font-size: 1.02rem;
+  font-size: 0.9rem;
   color: var(--muted);
 }

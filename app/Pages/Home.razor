@@ -82,7 +82,11 @@
         }
         else
         {
-          <div class="menu_items">
+          var containerClass = category.Equals("HAMBURGUERES", StringComparison.OrdinalIgnoreCase)
+            ? "menu_items menu_items--hamburguer"
+            : "menu_items menu_items--default";
+
+          <div class="@containerClass">
             @foreach (var item in items)
             {
               var isExpandable = !string.IsNullOrWhiteSpace(item.Description);
@@ -109,8 +113,9 @@
                 }
                 @if (!string.IsNullOrWhiteSpace(item.PriceText))
                 {
+                  <h3 class="item-price">@item.PriceText</h3>
                   <button class="btn-default" @onclick="() => AddToCart(item)" @onclick:stopPropagation="true">
-                    @item.PriceText · Adicionar
+                    Adicionar
                   </button>
                 }
 
