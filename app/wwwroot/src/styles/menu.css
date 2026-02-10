@@ -4,6 +4,7 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  margin-top: 8px;
   padding: 0 16px;
   box-sizing: border-box;
 }
@@ -80,7 +81,6 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
-    align-self: center;
   }
 
   .menu_items.menu_items--hamburguer .hamburguer .item-price {
@@ -117,6 +117,7 @@
     font-size: 1.1rem;
     font-weight: 800;
     color: antiquewhite; 
+    margin-bottom: 10px;
   }
 
   .acompanhamento,
@@ -241,6 +242,21 @@
   text-align: center;
   margin-top: 8px;
   letter-spacing: 0.6px;
+}
+
+.price-and-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  text-align: center;
+}
+
+.price-and-button .item-price {
+  margin: 0;
+  text-align: center;
 }
 
 .hamburguer,
