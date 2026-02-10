@@ -87,10 +87,14 @@
             ? "menu_items menu_items--hamburguer"
             : "menu_items menu_items--default";
 
+
+
           <div class="@containerClass">
             @foreach (var item in items)
             {
-              var isExpandable = !string.IsNullOrWhiteSpace(item.Description);
+              var maxCaracters = 40;
+              var caracterCount = item.Description?.Length ?? 0;
+              var isExpandable = caracterCount > maxCaracters;
               var isExpanded = expandedItems.Contains(item.Id);
               var itemClass = GetItemClass(category);
               var descClass = GetDescClass(category);
