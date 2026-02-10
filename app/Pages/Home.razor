@@ -113,10 +113,12 @@
                 }
                 @if (!string.IsNullOrWhiteSpace(item.PriceText))
                 {
-                  <h3 class="item-price">@item.PriceText</h3>
-                  <button class="btn-default" @onclick="() => AddToCart(item)" @onclick:stopPropagation="true">
-                    Adicionar
-                  </button>
+                  <div class="price-and-button">
+                    <h3 class="item-price">@item.PriceText</h3>
+                    <button class="btn-default" @onclick="() => AddToCart(item)" @onclick:stopPropagation="true">
+                      Adicionar
+                    </button>
+                  </div>
                 }
 
                 @if (isExpandable)

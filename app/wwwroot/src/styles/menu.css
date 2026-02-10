@@ -37,13 +37,13 @@
     display: grid !important;
     grid-template-columns: 80px 1fr auto;
     grid-template-areas:
-      "img title button"
-      "img desc  button"
-      "img price button";
+      "img title p-and-btn"
+      "img desc  p-and-btn"
+      "img desc  p-and-btn";
     align-items: center;
     column-gap: 12px;
-    row-gap: 4px;
-    padding: 12px;
+    padding: 20px;
+    align-content: center;
   }
 
   .menu_items.menu_items--hamburguer .hamburguer .img-container {
@@ -61,6 +61,7 @@
     text-align: left;
     font-size: 1.5rem;
     line-height: 1.1;
+    transform: translateY(5px);
   }
 
   .menu_items.menu_items--hamburguer .hamburguer .item-description {
@@ -72,33 +73,52 @@
     line-height: 1.35;
   }
 
+  .menu_items.menu_items--hamburguer .hamburguer .price-and-button {
+    grid-area: p-and-btn;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    align-self: center;
+  }
+
   .menu_items.menu_items--hamburguer .hamburguer .item-price {
-    grid-area: price;
-    text-align: left;
-    margin: 0;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--accent);
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: antiquewhite;
   }
 
   .menu_items.menu_items--hamburguer .hamburguer .btn-default {
-    grid-area: button;
-    margin-top: 0;
-    align-self: center;
-    padding: 6px 10px;
     font-size: 0.9rem;
     border-radius: 10px;
+    margin-top: 0;
   }
 
   .hamburguer,
   .acompanhamento,
   .bebida {
-    padding: 10px;
     min-height: 120px;
   }
 
   .item-description {
     font-size: 0.82rem;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .btn-default {
+    font-size: 0.9rem;
+    border-radius: 10px;
+    margin-top: 0;
+    transform: translateY(15px);
+  }
+
+  .item-price {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: antiquewhite; 
+    transform: translateY(15px);
   }
 
   .acompanhamento,
@@ -147,7 +167,6 @@
 
 .item-description {
   font-size: 0.95rem;
-  color: var(--muted);
   text-align: center;
   margin-top: 10px;
   padding: 0 8px;
@@ -159,8 +178,9 @@
 .hamburguer .item-description,
 .hamburguer .item-description_2 {
   font-family: "Montserrat", sans-serif;
-  font-weight: 400;
-  color: var(--muted);
+  font-weight: 500;
+  line-height: 1.5;
+  color: rgba(245, 231, 215, 0.6);
   display: -webkit-box;
   -webkit-line-clamp: 3;
   line-clamp: 3;
@@ -218,7 +238,7 @@
 
 .item-description_2 {
   font-size: 0.85rem;
-  color: var(--muted);
+  color: rgb(219, 204, 184, 0.6);
   text-transform: uppercase;
   text-align: center;
   margin-top: 8px;
@@ -245,7 +265,10 @@
   margin-top: 0;
   font-size: 0.9rem;
   min-height: 140px;
-  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
   position: relative; /* for chevron */
 }
 
@@ -256,7 +279,10 @@
   color: var(--muted);
   opacity: 0.45; /* make it less prominent */
   font-size: 0.85rem; /* slightly smaller */
-  transition: transform 260ms ease, color 160ms ease, opacity 160ms ease;
+  transition:
+    transform 260ms ease,
+    color 160ms ease,
+    opacity 160ms ease;
   pointer-events: none; /* allow clicks to pass to card */
 }
 
