@@ -19,11 +19,6 @@ header {
     background-color: #1b1b1a;
     z-index: 3;
   }
-
-  #nav_logo {
-    width: auto;
-    margin-top: 0;
-  }
 }
 
 #navbar {
@@ -31,11 +26,6 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-#nav_logo {
-  width: 15%;
-  margin-top: 0px;
 }
 
 #nav_list {
@@ -63,11 +53,6 @@ header {
   outline-offset: 3px;
 }
 
-.nav-item.active a {
-  color: var(--accent);
-  border-bottom: 3px solid #333333;
-}
-
 #mobile_btn {
   display: none;
 }
@@ -77,8 +62,7 @@ header {
 }
 
 @media screen and (max-width: 1170px) {
-  #nav_list,
-  #navbar .btn-default {
+  #nav_list {
     display: none;
   }
 
@@ -110,37 +94,7 @@ header {
   }
 }
 
-/* Sticky category label for mobile */
-#sticky_category {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  display: none;
-  pointer-events: none;
-  font-family: "Greek Rubone", "Spartacus", sans-serif;
-  font-weight: 700;
-  color: var(--accent);
-  font-size: 0.95rem;
-  background: rgba(27, 27, 26, 0.04);
-  padding: 6px 10px;
-  border-radius: 6px;
-  letter-spacing: 1px;
-  white-space: nowrap;
-  text-transform: uppercase;
-  transition: opacity 160ms ease, transform 160ms ease;
-  z-index: 6;
-}
-
 @media (max-width: 768px) {
-  #sticky_category {
-    display: block;
-    opacity: 0;
-  }
-  #sticky_category.show {
-    opacity: 1;
-  }
-
   /* Slightly smaller header on mobile to free up space */
   header {
     padding: 8px 6%;

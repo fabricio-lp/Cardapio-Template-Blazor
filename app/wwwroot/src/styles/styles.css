@@ -11,8 +11,6 @@
 :root {
   --accent: #cfb387;
   --muted: #e6dcc6; /* warmer beige/off-white for descriptions */
-  --card-bg: #282929;
-  --surface: #171717;
   --bg: #1b1b1a;
 }
 
@@ -34,21 +32,12 @@ body {
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-a:focus,
-button:focus {
-  outline: 3px solid rgba(230, 226, 217, 0.12);
-  outline-offset: 3px;
-}
-
-.description {
-  font-family: "Montserrat", sans-serif;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #e6e2d9;
-}
-
+.description,
 .item-description {
   font-family: "Montserrat", sans-serif;
   font-weight: 400;
@@ -79,14 +68,22 @@ button:focus {
 .btn-default {
   font-family: "Montserrat", sans-serif;
   font-weight: 700; /* heavier for price emphasis */
-  font-size: 1rem;
   line-height: 1.4;
-}
-body {
-  background-color: var(--bg);
-  min-height: 100vh;
+  border: none;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #a48147;
+  border-radius: 8px;
+  color: #171818;
+  font-size: 2rem;
+  padding: 4px 8px;
+  box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    transform 140ms ease;
+  margin-top: 8px;
 }
 
 /* Section title styling */
@@ -102,7 +99,8 @@ body {
   width: 100%;
 }
 
-/* Improve link and button focus states */
+a:focus,
+button:focus,
 a:focus-visible,
 button:focus-visible {
   outline: 3px solid rgba(230, 226, 217, 0.12);
@@ -139,24 +137,6 @@ button:focus-visible {
   }
 }
 
-.btn-default {
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #a48147;
-  border-radius: 8px;
-  color: #171818;
-  font-size: 2rem;
-  padding: 4px 8px;
-  box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition:
-    background-color 0.3s ease,
-    transform 140ms ease;
-  margin-top: 8px;
-}
-
 .btn-contact {
   border: none;
   display: flex;
@@ -189,10 +169,6 @@ button:focus-visible {
 
 .btn-default:hover {
   background-color: #171818;
-  color: antiquewhite;
-}
-
-.btn-contact:hover i {
   color: antiquewhite;
 }
 
