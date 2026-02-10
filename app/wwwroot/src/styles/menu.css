@@ -111,14 +111,12 @@
     font-size: 0.9rem;
     border-radius: 10px;
     margin-top: 0;
-    transform: translateY(15px);
   }
 
   .item-price {
     font-size: 1.1rem;
     font-weight: 800;
     color: antiquewhite; 
-    transform: translateY(15px);
   }
 
   .acompanhamento,
