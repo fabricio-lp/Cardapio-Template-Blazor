@@ -238,7 +238,8 @@
             {
               var addPriceText = add.Price.HasValue ? FormatPrice(add.Price.Value) : "";
               <button class="cart-add-option" @onclick="() => AddAddition(item.Name, add.Name)">
-                @add.Name @addPriceText
+                @add.Name
+                - @addPriceText
               </button>
             }
           </div>
