@@ -13,6 +13,7 @@
   --accent: #cfb387;
   --muted: #e6dcc6; 
   --bg: #1b1b1a;
+  -webkit-tap-highlight-color: transparent;
 }
 
 * {
