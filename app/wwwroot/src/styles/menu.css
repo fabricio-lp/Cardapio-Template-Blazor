@@ -21,7 +21,6 @@
   margin-top: 0;
 }
 
-/* Ensure at least 2 columns on small screens */
 @media (max-width: 520px) {
   .menu_items.menu_items--default {
     grid-template-columns: repeat(2, 1fr);
@@ -213,7 +212,6 @@
   max-height: calc(1.4em * 1);
 }
 
-/* Expanded state: remove clamp and allow full height */
 .item-description.expanded {
   -webkit-line-clamp: unset;
   line-clamp: unset;
@@ -270,7 +268,7 @@
     transform 180ms ease,
     box-shadow 180ms ease,
     background 180ms ease;
-  position: relative; /* for chevron */
+  position: relative;
 }
 
 .combo {
@@ -285,16 +283,15 @@
   top: 12px;
   right: 10px;
   color: var(--muted);
-  opacity: 0.45; /* make it less prominent */
-  font-size: 0.85rem; /* slightly smaller */
+  opacity: 0.45; 
+  font-size: 0.85rem; 
   transition:
     transform 260ms ease,
     color 160ms ease,
     opacity 160ms ease;
-  pointer-events: none; /* allow clicks to pass to card */
+  pointer-events: none; 
 }
 
-/* interactive/expanded state */
 .is-expanded .chevron-icon {
   transform: rotate(180deg);
   color: var(--accent);
@@ -391,7 +388,6 @@
   color: var(--muted);
 }
 
-/* Add a separator line for all items except the last one */
 .adicionais_item:not(:last-child) {
   border-bottom: 1px dashed #cfb387;
 }

@@ -11,7 +11,7 @@
 
 :root {
   --accent: #cfb387;
-  --muted: #e6dcc6; /* warmer beige/off-white for descriptions */
+  --muted: #e6dcc6; 
   --bg: #1b1b1a;
 }
 
@@ -78,7 +78,7 @@ body {
 
 .btn-default {
   font-family: "Montserrat", sans-serif;
-  font-weight: 700; /* heavier for price emphasis */
+  font-weight: 700; 
   line-height: 1.4;
   border: none;
   display: flex;
@@ -97,11 +97,10 @@ body {
   margin-top: 8px;
 }
 
-/* Section title styling */
 .beverages_title {
   font-family: "Greek Rubone", sans-serif;
   margin-top: 10px;
-  font-size: 1rem;
+  font-size: 1.8rem;
   text-align: center;
   letter-spacing: 2px;
   color: var(--accent);
@@ -215,7 +214,6 @@ button:focus-visible {
   }
 }
 
-/* Cart */
 .cart-fab-wrap {
   position: fixed;
   right: 18px;
