@@ -92,7 +92,7 @@
   .menu_items.menu_items--hamburguer .hamburguer .item-price,
   .menu_items.menu_items--hamburguer .combo .item-price {
     font-family: "Montserrat", sans-serif;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: 800;
     color: antiquewhite;
   }
@@ -117,7 +117,7 @@
   }
 
   .item-price {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: 800;
     color: antiquewhite; 
     margin-bottom: 10px;

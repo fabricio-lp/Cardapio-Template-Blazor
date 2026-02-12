@@ -65,7 +65,7 @@ body {
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.28);
 }
 
-.hamburguer, .combo .item-title {
+.hamburguer .item-title, .combo .item-title {
   font-family: "Greek Rubone", "Spartacus", "Greek-Freak", serif;
   font-weight: 700;
   letter-spacing: 1.9px;
