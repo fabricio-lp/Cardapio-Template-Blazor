@@ -54,6 +54,7 @@ body {
 }
 
 .item-title {
+  text-align: center;
   text-transform: uppercase;
   font-weight: 700;
   letter-spacing: 0.2px;
@@ -62,23 +63,12 @@ body {
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.28);
 }
 
-.hamburguer .item-title {
+.hamburguer, .combo .item-title {
   font-family: "Greek Rubone", "Spartacus", "Greek-Freak", serif;
   font-weight: 700;
   letter-spacing: 1.9px;
   color: #cfb387;
   font-size: 1.2rem;
-  line-height: 1.08;
-  -webkit-font-smoothing: antialiased;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.28);
-}
-
-.combo .item-title {
-  font-family: "Greek Rubone", "Spartacus", "Greek-Freak", serif;
-  font-weight: 700;
-  letter-spacing: 1.4px;
-  color: #cfb387;
-  font-size: 86.0rem;
   line-height: 1.08;
   -webkit-font-smoothing: antialiased;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.28);
