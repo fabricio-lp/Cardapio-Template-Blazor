@@ -356,18 +356,15 @@
     0 18px 34px rgba(0, 0, 0, 0.7);
 }
 
-.acompanhamento {
-  padding: 10px;
-  background-color: #282929;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-  font-size: 0.86rem;
-}
-
+.acompanhamento,
 .bebida {
   padding: 10px;
   background-color: #282929;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-  font-size: 0.9rem;
+}
+
+.acompanhamento {
+  font-size: 0.86rem;
 }
 
 .adicionais_list {

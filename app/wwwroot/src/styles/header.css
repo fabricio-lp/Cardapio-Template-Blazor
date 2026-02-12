@@ -12,10 +12,7 @@ header {
 
 @media screen and (min-width: 1171px) {
   header {
-    width: 100%;
     padding: 35px 8%;
-    position: sticky;
-    top: 0;
     background-color: #1b1b1a;
     z-index: 3;
   }
@@ -32,7 +29,7 @@ header {
   display: flex;
   list-style: none;
   gap: 48px;
-  margin-top: 0px;
+  margin: 0;
 }
 
 .nav-item a {
@@ -46,11 +43,6 @@ header {
 .nav-item a:hover {
   color: #e6e2d9;
   transform: translateY(-2px);
-}
-
-.nav-item a:focus-visible {
-  outline: 3px solid rgba(230, 226, 217, 0.12);
-  outline-offset: 3px;
 }
 
 #mobile_btn {
@@ -99,8 +91,6 @@ header {
   header {
     padding: 8px 6%;
     position: fixed;
-    width: 100%;
-    top: 0;
   }
 
   #nav_logo {

@@ -39,18 +39,20 @@ body {
 }
 
 .description,
-.item-description {
+.item-description,
+.item-description_2 {
   font-family: "Montserrat", sans-serif;
-  font-weight: 400;
   line-height: 1.5;
   color: #e6e2d9;
 }
 
+.description,
+.item-description {
+  font-weight: 400;
+}
+
 .item-description_2 {
-  font-family: "Montserrat", sans-serif;
   font-weight: 600;
-  line-height: 1.5;
-  color: #e6e2d9;
 }
 
 .item-title {
@@ -99,7 +101,7 @@ body {
 .beverages_title {
   font-family: "Greek Rubone", sans-serif;
   margin-top: 10px;
-  font-size: 1.rem;
+  font-size: 1rem;
   text-align: center;
   letter-spacing: 2px;
   color: var(--accent);
@@ -125,13 +127,8 @@ button:focus-visible {
   #nav_list {
     position: absolute;
     left: 50%;
-    transform: translate(-50%, -50%);
     top: 50%;
-    display: flex;
-    list-style: none;
-    gap: 48px;
-    margin: 0;
-    margin-top: 0;
+    transform: translate(-50%, -50%);
   }
 
   #nav_logo {
@@ -548,12 +545,6 @@ button:focus-visible {
   transform: translateY(-1px);
 }
 
-.cart-additions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
 .cart-additions-block {
   display: flex;
   flex-direction: column;
@@ -584,13 +575,6 @@ button:focus-visible {
   gap: 10px;
   font-size: 0.8rem;
   color: #e6e2d9;
-}
-
-.cart-add-actions {
-  margin: 6px 0 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
 }
 
 .cart-add-btn {
