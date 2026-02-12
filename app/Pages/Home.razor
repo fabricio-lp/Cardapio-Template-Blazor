@@ -63,7 +63,7 @@
         }
 
         var titleClass = "beverages_title";
-        var titleStyle = category == "HAMBURGUERES"
+        var titleStyle = category == "COMBO"
           ? "height:0;margin:0;padding:0;overflow:hidden;opacity:0;border:none;"
           : string.Empty;
 
@@ -84,10 +84,9 @@
         else
         {
           var containerClass = category.Equals("HAMBURGUERES", StringComparison.OrdinalIgnoreCase)
+            || category.Equals("COMBO", StringComparison.OrdinalIgnoreCase)
             ? "menu_items menu_items--hamburguer"
             : "menu_items menu_items--default";
-
-
 
           <div class="@containerClass">
             @foreach (var item in items)
@@ -290,7 +289,7 @@
   private string toastMessage = string.Empty;
   private bool showCartHint;
 
-  private readonly List<string> CategoryOrder = new() { "HAMBURGUERES", "ADICIONAIS" };
+  private readonly List<string> CategoryOrder = new() { "COMBO", "HAMBURGUERES", "ADICIONAIS" };
 
   private IEnumerable<string> OrderedCategories
   {
@@ -466,6 +465,7 @@
     var normalized = RemoveDiacritics(category).ToUpperInvariant();
     return normalized switch
     {
+      "COMBO" => "combo",
       "HAMBURGUERES" => "hamburguer",
       "ACOMPANHAMENTOS" => "acompanhamento",
       "BEBIDAS" => "bebida",
@@ -484,6 +484,7 @@
     var normalized = RemoveDiacritics(category).ToUpperInvariant();
     return normalized switch
     {
+      "COMBO" => "h_img",
       "HAMBURGUERES" => "h_img",
       "ACOMPANHAMENTOS" => "a_img",
       "BEBIDAS" => "b_img",

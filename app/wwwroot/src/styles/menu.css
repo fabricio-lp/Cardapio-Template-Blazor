@@ -32,8 +32,10 @@
     grid-template-columns: 1fr;
     gap: 12px;
   }
+  
 
-  .menu_items.menu_items--hamburguer .hamburguer {
+  .menu_items.menu_items--hamburguer .hamburguer,
+  .menu_items.menu_items--hamburguer .combo {
     display: grid !important;
     grid-template-columns: 80px 1fr auto;
     grid-template-areas:
@@ -46,17 +48,20 @@
     align-content: center;
   }
 
-  .menu_items.menu_items--hamburguer .hamburguer .img-container {
+  .menu_items.menu_items--hamburguer .hamburguer .img-container,
+  .menu_items.menu_items--hamburguer .combo .img-container {
     grid-area: img;
     margin: 0;
   }
 
-  .menu_items.menu_items--hamburguer .hamburguer .h_img-container {
+  .menu_items.menu_items--hamburguer .hamburguer .h_img-container,
+  .menu_items.menu_items--hamburguer .combo .h_img-container {
     width: 72px;
     height: 72px;
   }
 
-  .menu_items.menu_items--hamburguer .hamburguer .item-title {
+  .menu_items.menu_items--hamburguer .hamburguer .item-title,
+  .menu_items.menu_items--hamburguer .combo .item-title {
     grid-area: title;
     text-align: left;
     font-size: 1.5rem;
@@ -64,7 +69,8 @@
     transform: translateY(5px);
   }
 
-  .menu_items.menu_items--hamburguer .hamburguer .item-description {
+  .menu_items.menu_items--hamburguer .hamburguer .item-description,
+  .menu_items.menu_items--hamburguer .combo .item-description {
     grid-area: desc;
     text-align: left;
     margin-top: 2px;
@@ -73,7 +79,8 @@
     line-height: 1.35;
   }
 
-  .menu_items.menu_items--hamburguer .hamburguer .price-and-button {
+  .menu_items.menu_items--hamburguer .hamburguer .price-and-button,
+  .menu_items.menu_items--hamburguer .combo .price-and-button {
     grid-area: p-and-btn;
     display: flex;
     flex-direction: column;
@@ -82,13 +89,16 @@
     gap: 6px;
   }
 
-  .menu_items.menu_items--hamburguer .hamburguer .item-price {
+  .menu_items.menu_items--hamburguer .hamburguer .item-price,
+  .menu_items.menu_items--hamburguer .combo .item-price {
+    font-family: "Montserrat", sans-serif;
     font-size: 1.1rem;
     font-weight: 800;
     color: antiquewhite;
   }
 
   .hamburguer,
+  .combo,
   .acompanhamento,
   .bebida {
     min-height: 120px;
@@ -168,7 +178,9 @@
 }
 
 .hamburguer .item-description,
-.hamburguer .item-description_2 {
+.hamburguer .item-description_2,
+.combo .item-description,
+.combo .item-description_2 {
   font-family: "Montserrat", sans-serif;
   font-weight: 500;
   line-height: 1.5;
@@ -212,9 +224,9 @@
 .item-description_2 {
   font-size: 0.85rem;
   color: rgb(219, 204, 184, 0.6);
-  text-transform: uppercase;
   text-align: center;
-  margin-top: 8px;
+  margin-top: 3px;
+  margin-bottom: 3px;
   letter-spacing: 0.6px;
 }
 
@@ -234,6 +246,7 @@
 }
 
 .hamburguer,
+.combo,
 .acompanhamento,
 .bebida {
   display: flex;
@@ -258,6 +271,13 @@
     box-shadow 180ms ease,
     background 180ms ease;
   position: relative; /* for chevron */
+}
+
+.combo {
+  box-shadow:
+    0 0 0 1px rgba(212, 175, 55, 0.5),
+    0 0px 20px rgba(216, 153, 35, 0.2);
+    
 }
 
 .chevron-icon {
@@ -288,6 +308,7 @@
 }
 
 .hamburguer:hover,
+.combo:hover,
 .acompanhamento:hover,
 .bebida:hover {
   transform: translateY(-4px);
@@ -295,23 +316,44 @@
   background: linear-gradient(180deg, rgba(40, 41, 41, 1), rgba(32, 32, 32, 1));
 }
 
+.combo:hover {
+  box-shadow:
+    0 0 0 1px rgba(212, 175, 55, 0.6),
+    0 14px 28px rgba(0, 0, 0, 0.6);
+}
+
 .hamburguer[role="button"],
+.combo[role="button"],
 .acompanhamento[role="button"],
 .bebida[role="button"] {
   cursor: pointer;
 }
 
 .hamburguer:focus-visible,
+.combo:focus-visible,
 .acompanhamento:focus-visible,
 .bebida:focus-visible {
   transform: translateY(-4px);
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.6);
 }
 
+.combo:focus-visible {
+  box-shadow:
+    0 0 0 1px rgba(212, 175, 55, 0.7),
+    0 16px 32px rgba(0, 0, 0, 0.65);
+}
+
 .hamburguer[aria-expanded="true"],
+.combo[aria-expanded="true"],
 .acompanhamento[aria-expanded="true"],
 .bebida[aria-expanded="true"] {
   box-shadow: 0 18px 34px rgba(0, 0, 0, 0.65);
+}
+
+.combo[aria-expanded="true"] {
+  box-shadow:
+    0 0 0 1px rgba(212, 175, 55, 0.7),
+    0 18px 34px rgba(0, 0, 0, 0.7);
 }
 
 .acompanhamento {
